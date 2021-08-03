@@ -2,19 +2,13 @@
 # Prepares environment
 CheckRequiredSources() {
  if [ ! -f "${2}" ]; then
-  echo ">> SourceNotFoundException << [Launcher.sh]: Script no encontrado -> ${1}"
+  echo ">> SourceNotFoundException << [Launcher.sh]: Script not found -> ${1}"
   exit 1
  fi
 }
 
-CheckLauncherRequiredEnvironment() {
- CheckRequiredFile "${scriptDailyReport}"
- CheckRequiredFile "${scriptHistoricReport}"
- CheckRequiredFile "${scriptGenerateLogs}"
-}
-
 ModifyCron() {
- CheckRequiredParam "cronFile" "${1}" "ModifyCron():L76"
+ CheckRequiredParam "cronFile" "${1}" "ModifyCron():L62"
 
  if [ -f "${fileCronCopy}" ]; then
   AddLog "Restoring previous cron file -> ${fileCronCopy}" $warnLog
@@ -47,22 +41,18 @@ requiredScript=/miner/scripts/CommonUtils.sh
 CheckRequiredSources "CommonUtils.sh" $requiredScript
 source $requiredScript
 
-SleepCustom 10
+SleepCustom 5
 
 InitLog "Launcher"
 AddLog "START!"
 
 LoadScriptPaths
-LoadGenerateLogProperties
 LoadCronProperties
 
 SleepMedium
 
-CheckLauncherRequiredEnvironment
-
-SleepMedium
-
-CheckRequiredFile "${fileMinerOriginalLog}"
+CheckRequiredFile "${scriptDailyReport}"
+CheckRequiredFile "${scriptHistoricReport}"
 
 SleepMedium
 
