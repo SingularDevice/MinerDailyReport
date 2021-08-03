@@ -100,7 +100,7 @@ read -r -d '' msg <<EOT
 -----------------------------------------------
 > ${todayUnpaid} ${minerCryptoMining}
 -----------------------------------------------
-- Price: [${price}€]
+- Today's price: [${price}€]
 - Benefit: [${benefits}€]
 $(
  benefInd=$(echo "scale=3;(${benefits} / ${numberOfGPUs})" | bc -l)
@@ -115,7 +115,7 @@ $(
  if (( $(echo "${newTotal} < 1" | bc -l) )); then
   newTotal="0${newTotal}"
  fi
- echo "- <b>TOTAL Ind</b>: ${newTotal}"
+ echo "- <b>Mined/GPU</b>: ${newTotal}"
 )
 -----------------------------------------------
 EOT
