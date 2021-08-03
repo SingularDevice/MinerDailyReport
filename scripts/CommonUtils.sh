@@ -98,8 +98,17 @@ ThrowException() {
  exit 1
 }
 
+DeleteFileIfExists() {
+ CheckRequiredParam "filePath" "${1}" "DeleteFileIfExists():L101"
+ if [ -f "${1}" ]; then
+  AddLog "Eliminando fichero -> ${1}" $warnLog
+  rm $1
+ fi
+ SleepLow
+}
+
 CheckRequiredFile() {
- CheckRequiredParam "filePath" "${1}" "CheckRequiredFile():L129"
+ CheckRequiredParam "filePath" "${1}" "CheckRequiredFile():L111"
  if [ ! -f "${1}" ]; then
   AddLog "Required file not exists -> ${1}" $errorLog
  fi
