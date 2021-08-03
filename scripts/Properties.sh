@@ -54,6 +54,7 @@ LoadScriptPaths() {
 LoadGenerateLogProperties() {
  directoryLogs="${securePath}/logs"
  fileHistoricLog="${directoryLogs}/history.log"
+ poolLog="${directoryLogs}/poolNames.log"
 }
  
 LoadPriceProperties() {
@@ -75,11 +76,11 @@ LoadAPIProperties() {
   ;;
 
   "HiveOs")
-    LoadHiveOsAPIProperties
+#    LoadHiveOsAPIProperties
   ;;
 
   "Ethermine")
-    LoadEthermineAPIProperties
+#    LoadEthermineAPIProperties
   ;;
 
   *)
@@ -92,10 +93,4 @@ LoadFlexpoolAPIProperties() {
  jqMinerInfo=".result.balance"
  apiMinerPayments="https://api.flexpool.io/v2/miner/payments?page=0&coin=${minerCryptoMining}&countervalue=${currency}&address=${minerHash}"
  jqMinerPayment=".result.data[0].value"
-}
-
-LoadHiveOsAPIProperties() {
-}
-
-LoadEthermineAPIProperties() {
 }

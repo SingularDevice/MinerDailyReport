@@ -12,20 +12,26 @@ ModifyCron() {
 
  if [ -f "${fileCronCopy}" ]; then
   AddLog "Restoring previous cron file -> ${fileCronCopy}" $warnLog
-  cp "${fileCronCopy}" $1
+  sudo cp "${fileCronCopy}" $1
  else
-  AddLog "Copying cron file-> ${fileCronCopy}"
-  cp $1 "${fileCronCopy}"
+  if [ ! -f "${1}" ]; then
+   sudo touch $1
+  fi
  fi
 
- echo "" >> $1
- echo "# Miner daily report" >> $1
- echo "${dailyReportMinute} ${dailyReportHour} */1 * * ${scriptDailyReport} ${requiredScript}" >> $1
- echo "" >> $1
- echo "# Miner history report" >> $1
- echo "${historyReportMinute} ${historyReportHour} * * ${historyReportDay} ${scriptHistoricReport} ${requiredScript} w" >> $1
- echo "${historyReportMonthlyMinute} ${historyReportMonthlyHour} ${historyReportMonthlyDay} * * ${scriptHistoricReport} ${requiredScript} m" >> $1
- echo "" >> $1
+ echo "" >> ./newCron
+ echo "# Miner daily report" >> ./newCron
+ echo "${dailyReportMinute} ${dailyReportHour} */1 * * ${scriptDailyReport} ${requiredScript}" >> ./newCron
+ echo "" >> ./newCron
+ echo "# Miner history report" >> ./newCron
+ echo "${historyReportMinute} ${historyReportHour} * * ${historyReportDay} ${scriptHistoricReport} ${requiredScript} w" >> ./newCron
+ echo "${historyReportMonthlyMinute} ${historyReportMonthlyHour} ${historyReportMonthlyDay} * * ${scriptHistoricReport} ${requiredScript} m" >> ./newCron
+ echo "" >> ./newCron
+
+ AddLog "Copying cron file-> ${fileCronCopy}"
+ aux=$(cat ./newCron | sudo tee $1)
+ sudo rm ./newCron
+ sudo cp $1 "${fileCronCopy}"
 
  SleepMedium
 
@@ -56,12 +62,8 @@ CheckRequiredFile "${scriptHistoricReport}"
 
 SleepMedium
 
-CheckRequiredFile "${fileCron}"
-
 AddLog "Modifying cron file..."
 ModifyCron "${fileCron}"
-
-CheckRequiredFile "${fileCronCopy}"
 
 AddLog "Cron file modified properly" $okLog
 

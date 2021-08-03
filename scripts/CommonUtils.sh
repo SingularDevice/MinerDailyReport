@@ -56,7 +56,7 @@ SendTelegramNotification() {
  fi
 
  if [ $telegramSendErrors == true ]; then
-  curl -s -X POST $url -d chat_id=$chatId -d text="${telegramMsg}"
+  sudo curl -s -X POST $url -d chat_id=$chatId -d text="${telegramMsg}"
  else
   AddLog "Telegram messages deactivated" $warnLog
  fi
@@ -98,37 +98,10 @@ ThrowException() {
  exit 1
 }
 
-CreateDirectoryIfNotExists() {
- CheckRequiredParam "dirPath" "${1}" "CreateDirectoryIfNotExists():L102"
- if [ ! -d "${1}" ]; then
-  AddLog "Creating directory -> ${1}"
-  mkdir $1
- fi
- SleepLow
-}
-
-CheckRequiredDirectory() {
- CheckRequiredParam "dirPath" "${1}" "CheckRequiredDirectory():L111"
- if [ ! -d "${1}" ]; then
-  AddLog "Required directory not exists -> ${1}" $errorLog
- fi
- AddLog "Directory found -> ${1}" $okLog
- SleepLow
-}
-
-DeleteFileIfExists() {
- CheckRequiredParam "filePath" "${1}" "DeleteFileIfExists():L120"
- if [ -f "${1}" ]; then
-  AddLog "Deleted file -> ${1}" $warnLog
-  rm $1
- fi
- SleepLow
-}
-
 CheckRequiredFile() {
  CheckRequiredParam "filePath" "${1}" "CheckRequiredFile():L129"
  if [ ! -f "${1}" ]; then
-  AddLog "Required directory not exists -> ${1}" $errorLog
+  AddLog "Required file not exists -> ${1}" $errorLog
  fi
  local num=$(cat $1 | wc -l)
  if (( $(echo "${num} < 1" | bc -l) )); then
@@ -138,30 +111,10 @@ CheckRequiredFile() {
  SleepLow
 }
 
-# Sleep tras cada nuevo log
-SleepSuperLow() {
- sleep 0.05
-}
-
-# Sleep tras cada comprobación de un fichero/directorio
-SleepLow() {
- sleep 0.15
-}
-
-# Sleep entre elementos de la lógica
 SleepMedium() {
  sleep 0.25
-}
-
-# Sleep tras la ejecución de un script
-SleepHigh() {
- sleep 2
 }
 
 SleepCustom() {
  sleep "${1}"
 }
-
-# $?: Es la variable donde se alamacena lo que ha devuelto la última funcion
-# Cada script tiene su propia salida (exit), si llama a otro se crea un nuevo "hilo" que depende de un nuevo exit
-# En el caso de las funciones, equivalen a código que se ejecuta dentro de ese hilo y por lo tanto si hay un exit finaliza el hilo
