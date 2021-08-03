@@ -64,10 +64,11 @@ totalUnpaid=$(cat $unpaidFile)
 todayUnpaid=$totalUnpaid
 
 if [ ! -f $yesterdayUnpaidFile ]; then
- exit 1
+ yesterdayUnpaid=0
+else
+ yesterdayUnpaid=$(cat $yesterdayUnpaidFile)
 fi
 
-yesterdayUnpaid=$(cat $yesterdayUnpaidFile)
 todayUnpaid=$(printf %.10f $(echo "scale=10;($totalUnpaid-$yesterdayUnpaid)/1" | bc -l))
 checkNegative=$(echo $todayUnpaid | grep -Eo "-")
 
